@@ -48,12 +48,32 @@
   register: _ROLENAME_conf
   tags: configure
 
-- name: restart ROLENAME
-  shell: |
-    gridinit_cmd reload
-    gridinit_cmd restart  {{openio_ROLENAME_namespace}}-{{openio_ROLENAME_servicename}}
+- name: "reload gridinit to apply the new configuration"
+  shell: gridinit_cmd reload
   when:
-    - _ROLENAME_conf.changed
+    - _ROLENAME_conf is changed
     - not openio_ROLENAME_provision_only
+
+- name: 'Start service or reload changed config'
+  shell: "gridinit_cmd {{ verb }} {{ openio_ROLENAME_namespace }}-{{ openio_ROLENAME_servicename }}"
   tags: configure
+  when:
+    - not openio_ROLENAME_provision_only
+  vars:
+    verb: "{{ 'restart' if not ROLENAME_provision_only and _ROLENAME_conf is changed else 'start' }}"
+
+- block:
+    - name: check ROLENAME
+      wait_for:
+        host: "{{ openio_ROLENAME_bind_address }}"
+        port: "{{ openio_ROLENAME_bind_port }}"
+      register: _ROLENAME_check
+      retries: 3
+      delay: 5
+      until: _ROLENAME_check is success
+      changed_when: false
+      tags: configure
+      when:
+        - not openio_ROLENAME_provision_only
+  when: openio_bootstrap | d(false)
 ...

@@ -1,16 +1,24 @@
 # roles/ROLENAME/defaults/main.yml
 ---
-openio_ROLENAME_namespace: "OPENIO"
-openio_ROLENAME_serviceid: "0"
+openio_ROLENAME_namespace: "{{ namespace | default('OPENIO') }}"
+openio_ROLENAME_serviceid: "{{ 0 + openio_legacy_serviceid | d(0) | int }}"
 
 openio_ROLENAME_gridinit_dir: "/etc/gridinit.d/{{ openio_ROLENAME_namespace }}"
 openio_ROLENAME_gridinit_file_prefix: ""
 
 #openio_ROLENAME_bind_interface: "{{ ansible_default_ipv4.alias }}"
 #openio_ROLENAME_bind_address:
-#  "{{ hostvars[inventory_hostname]['ansible_' + openio_ROLENAME_bind_interface]['ipv4']['address'] }}"
+#  "{{ openio_bind_address \
+#    | default(hostvars[inventory_hostname]['ansible_' + openio_ROLENAME_bind_interface]['ipv4']['address']) }}"
 
 #openio_ROLENAME_volume: "/var/lib/oio/sds/{{ openio_ROLENAME_namespace }}/{{ openio_ROLENAME_servicename }}"
+
 openio_ROLENAME_provision_only: false
 openio_ROLENAME_location: "{{ ansible_hostname }}.{{ openio_ROLENAME_serviceid }}"
+openio_ROLENAME_slots:
+  "{{ [ openio_ROLENAME_type, openio_ROLENAME_type ~ '-' ~ openio_ROLENAME_location.split('.')[:-2] \
+  | join('-') ] \
+  if openio_ROLENAME_location.split('.') | length > 2 \
+  else [ openio_ROLENAME_type ] }}"
+
 ...
