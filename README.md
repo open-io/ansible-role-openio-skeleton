@@ -53,7 +53,7 @@ EOF
 
 #### `Role Variables` table
 ```sh
-for i in $(grep -E "^openio_" defaults/main.yml |cut -d':' -f1| sort); do echo '|' '`'$i'`'' | `'$(grep $i defaults/main.yml|cut -d: -f2|sed -e "s/^ //")'` | ... |'; done
+awk -F": " '/^openio_/{print "| `" $1 "` | `" $2 "` | ... |"}'
 ```
 
 -----REMOVE--THE---8<-----PREVIOUS---PART------
