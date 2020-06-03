@@ -55,7 +55,7 @@ Aliquam in velit commodo, rutrum eros ut, condimentum nulla. Praesent tempus mi 
 
 ### Configure Git Commit Message Template
 
-- Create a file at `~/.gitmessage-openio` (you can adapt the path if you want) with th following content:
+- Create a file at `~/.gitmessage-openio` (you can adapt the path if you want) with the following content:
 
 ```text
 
@@ -71,7 +71,7 @@ Aliquam in velit commodo, rutrum eros ut, condimentum nulla. Praesent tempus mi 
 
 
  ##### IMPACT
-# IMPACT 	if the change has an impact on previous versions that can break compatibility, explain it here. therwise, set to "N/A" 	YES (N/A)
+# IMPACT 	if the change has an impact on previous versions that can break compatibility, explain it here. otherwise, set to "N/A" 	YES (N/A)
 
 
  ##### ADDITIONAL INFORMATION
